@@ -125,6 +125,31 @@ details[open] .chev{transform:rotate(180deg)}
 #app{display:none}
 #app .screen{display:none}
 #app .screen.active{display:block}
+/* ===== login screen ===== */
+#onboarding{display:none}
+#login{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:var(--canvas);padding:24px;transition:opacity .4s ease,transform .4s ease}
+#login.leaving{opacity:0;transform:translateY(-6px)}
+.login-card{width:430px;max-width:100%;background:var(--paper);border-radius:20px;padding:38px 40px 30px;box-shadow:0 30px 60px rgba(26,26,22,.10),0 6px 20px rgba(26,26,22,.05);animation:rise .5s ease both}
+.login-brand{display:flex;align-items:center;gap:9px;margin-bottom:26px}
+.login-brand .logo{width:26px;height:26px;flex:0 0 26px}
+.login-brand b{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--blue)}
+.login-card h1{font-size:clamp(34px,4.4vw,44px);line-height:1.04;margin-bottom:10px}
+.login-sub{font-size:15.5px;color:var(--ink-60);margin-bottom:30px}
+.field{margin-bottom:20px}
+.field .flabel{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink-80);margin-bottom:8px}
+.field .flabel a{font-size:13px;font-weight:500;color:var(--ink-40)}
+.field .flabel a:hover{color:var(--violet)}
+.field input{width:100%;height:52px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:0 16px;font-family:inherit;font-size:15px;color:var(--ink);box-shadow:var(--shadow-sm);transition:border-color .15s,box-shadow .15s}
+.field input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(91,62,142,.13)}
+.signin-btn{width:100%;height:54px;border:none;border-radius:12px;background:var(--violet);color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;transition:filter .15s}
+.signin-btn:hover{filter:brightness(1.08)}
+.signin-btn:disabled{cursor:default}
+.signin-btn .spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.signin-btn.loading .spin{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.login-foot{text-align:center;font-size:14px;color:var(--ink-40);margin-top:22px}
+.login-foot a{font-weight:700;color:var(--blue)}
+#onboarding.entering{animation:rise .5s ease both}
 /* ===== onboarding-specific components ===== */
 
   /* view switching — class-based only, no ID display rules */
@@ -322,6 +347,25 @@ details[open] .chev{transform:rotate(180deg)}
     <path d="M20 12.5 l2.4 4.9 5.4 .8 -3.9 3.8 .9 5.4 -4.8-2.5 -4.8 2.5 .9-5.4 -3.9-3.8 5.4-.8 Z" fill="#fff"/>
   </symbol>
 </svg>
+
+<!-- ===== LOGIN ===== -->
+<div id="login">
+  <form class="login-card" onsubmit="signIn(event)">
+    <div class="login-brand"><svg class="logo"><use href="#compass"/></svg><b>Compass</b></div>
+    <h1>Welcome back</h1>
+    <p class="login-sub">Sign in to pick up where you left off.</p>
+    <div class="field">
+      <div class="flabel"><label for="login-email">Email</label></div>
+      <input id="login-email" type="email" value="jordan.reyes@colibri.co" autocomplete="username">
+    </div>
+    <div class="field">
+      <div class="flabel"><label for="login-pw">Password</label><a href="javascript:void(0)">Forgot?</a></div>
+      <input id="login-pw" type="password" value="compass2026" autocomplete="current-password">
+    </div>
+    <button type="submit" id="signin-btn" class="signin-btn"><span class="spin"></span><span class="btn-label">Sign in</span></button>
+    <p class="login-foot">New here? <a href="javascript:void(0)">Create an account</a></p>
+  </form>
+</div>
 
 <!-- ===== ONBOARDING ===== -->
 <div id="onboarding">
@@ -912,6 +956,27 @@ function showScreen(name){
 /* onboarding calls these when finished */
 function goDashboard(){enterApp('dashboard');}
 function saveExit(){enterApp('dashboard');}
+
+/* ================= LOGIN ================= */
+/* Prefilled demo — any input works. Small spinner, then fade to onboarding. */
+function signIn(e){
+  if(e) e.preventDefault();
+  var btn=document.getElementById('signin-btn');
+  if(btn.classList.contains('loading')) return;
+  btn.classList.add('loading'); btn.disabled=true;
+  var lbl=btn.querySelector('.btn-label'); if(lbl) lbl.textContent='Signing in…';
+  setTimeout(function(){
+    var login=document.getElementById('login');
+    login.classList.add('leaving');
+    setTimeout(function(){
+      login.style.display='none';
+      var ob=document.getElementById('onboarding');
+      ob.style.display='block';
+      ob.classList.add('entering');
+      window.scrollTo(0,0);
+    },400);
+  },900);
+}
 
 /* ================= CHAT (conversation) ================= */
 let pending=null;           // current expected answer handler key
