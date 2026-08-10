@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Compass Design System
+
+A shared visual language for the Compass exam-prep product. Everything here —
+tokens, components, page compositions — is backed by a single stylesheet at
+`styles/compass.css` in the repo root. The HTML prototype and the React
+components in this Storybook both consume that file, so what you see here is
+what ships in the app.
+
+## How the pieces fit together
+
+```
+Colibri/
+├─ styles/
+│  └─ compass.css              ← source of truth (design tokens + component classes)
+├─ compassprototype (3).html   ← HTML prototype, <link>s to compass.css
+└─ design-system/              ← this Storybook
+   └─ src/
+      ├─ tokens/tokens.ts      ← TS mirror of the CSS custom properties
+      ├─ foundations/          ← Colors, Typography, Radii, Shadows (docs)
+      ├─ components/           ← Atoms + Molecules (React components + stories)
+      └─ icons/                ← Line-icon library
+```
+
+## Using components in a React app
+
+```tsx
+// One-time, in your app entry:
+import '../styles/compass.css';
+
+// Then anywhere:
+import { Button, RubiBubble, ProgressRing } from '@compass/design-system';
+```
+
+## Using the visual language in plain HTML
+
+```html
+<link rel="stylesheet" href="styles/compass.css">
+
+<button class="cta">Continue</button>
+<span class="chip-btn">Skip for now</span>
+```
+
+The class-based utilities in `compass.css` cover the majority of components,
+so a designer or engineer working in plain HTML can reach for `.cta`, `.chip`,
+`.card`, `.rubi-ask`, `.nav-item`, `.sidebar` and get the exact same visuals
+as the React components.
+
+## Principles
+
+- **Warm, editorial tone.** Source Serif for headlines, Inter for UI. Palette
+  is grounded in a paper/canvas neutral rather than pure white.
+- **Rubi is a character, not a chatbot.** The Rubi mark, the Rubi Violet
+  primary CTA, and the Rubi-authored bubble styles all express the same
+  companion persona.
+- **Readiness is a spectrum, not a score.** Teal for "on track", amber for
+  "attention", green for "proven". Never green for "high", red for "low".
+- **Class-first.** Component classes live in `compass.css` so anyone can
+  build a screen without touching React.
