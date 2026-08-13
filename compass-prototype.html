@@ -189,7 +189,7 @@ details[open] .chev{transform:rotate(180deg)}
   .mini-prog{display:none}
 
   /* ================= CHAT VIEW ================= */
-  .chat-wrap{max-width:1120px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:44px;align-items:start}
+  .chat-wrap{max-width:1120px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:72px;align-items:start}
   .convo-col{min-height:calc(100vh - 56px);display:flex;flex-direction:column}
   .messages{flex:1;padding:36px 0 24px}
 
@@ -218,6 +218,7 @@ details[open] .chev{transform:rotate(180deg)}
   .rubi-turn .who{font-size:12px;font-weight:600;color:var(--rubi-red);margin-bottom:3px}
   .rubi-turn p{margin:0;font-size:17px;line-height:1.55;color:var(--ink);max-width:56ch}
   .rubi-turn .body>p+p{margin-top:8px;font-size:16px;color:var(--ink-60)}
+  .rubi-turn .body>p .pace-insight{display:block;margin:2px 0;background:var(--violet-tint);border-left:3px solid var(--violet);border-radius:8px;padding:11px 15px;color:var(--ink);font-weight:500}
   .learner{display:flex;justify-content:flex-end;margin:18px 0 4px}
   .learner .chip{background:var(--blue);color:#fff;font-size:14.5px;font-weight:500;padding:11px 18px;border-radius:16px 16px 4px 16px;max-width:82%}
 
@@ -1077,6 +1078,7 @@ function answerExam(){clearInputs();learner('My exam is Aug 14, 2026');fillSlot(
     paceLine = "This is a ~" + COURSE_HOURS + "-hour course, and based on students who've passed, we recommend about " +
       pace + " min a day to stay on track.";
   }
+  paceLine = '<span class="pace-insight">' + paceLine + '</span>';  // highlighted Rubi insight (not a card)
   rubi(["Got it — Aug 14, 2026. That's " + daysOut + " days out, about " + Math.round(daysOut / 7) + " weeks. Very workable if we stay steady.",
         paceLine,
         "How much time can you give it? Pick how many days a week, and how long each session runs."]);
