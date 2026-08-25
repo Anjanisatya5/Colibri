@@ -232,6 +232,36 @@ details[open] .chev{transform:rotate(180deg)}
   .mode .m-tag{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--violet)}
   .mode .m-title{font-family:var(--serif);font-size:19px;font-weight:600;display:flex;align-items:center;gap:8px}
   .mode .m-desc{font-size:13.5px;line-height:1.5;color:var(--ink-60)}
+  /* ---- prompt-led landing (v2) ---- */
+  #view-chat.landing .chatbar{display:none}
+  #view-chat.landing .rail{display:none}
+  #view-chat.landing .chat-wrap{grid-template-columns:1fr}
+  .hero{position:relative;z-index:1}
+  .prompt{max-width:600px;margin:10px auto 0;display:flex;align-items:center;gap:10px;background:#fff;
+    border:1.5px solid var(--c-border-interactive,#67727D);border-radius:16px;
+    box-shadow:0 2px 0 rgba(31,29,24,.05),0 14px 32px rgba(31,29,24,.10);padding:14px 14px 14px 20px}
+  .prompt-in{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:17px;color:var(--ink)}
+  .prompt-in::placeholder{color:var(--ink-40);transition:opacity .3s ease}
+  .prompt-in.ph-out::placeholder{opacity:0}
+  .prompt-send{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;border:none;display:grid;place-items:center}
+  .prompt-send:hover{filter:brightness(1.08)} .prompt-send .i{width:18px;height:18px}
+  .landing-links{display:flex;align-items:center;justify-content:center;gap:14px;margin:18px auto 0}
+  .tlink{background:none;border:none;font-family:inherit;font-size:14px;font-weight:500;color:var(--ink-60);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px}
+  .tlink:hover{color:var(--blue)}
+  .ll-sep{width:3px;height:3px;border-radius:50%;background:var(--line-2)}
+  .watermark{position:fixed;right:-90px;bottom:-100px;width:440px;height:440px;opacity:.05;color:var(--blue);pointer-events:none;z-index:0}
+  #view-chat:not(.landing) .watermark{display:none}
+  /* muted secondary option + tradeoff note (change 5) */
+  .opt.muted:not(.sel){color:var(--ink-40);border-style:dashed;font-weight:500}
+  .opt-note{display:none;font-size:12.5px;line-height:1.45;color:#835B16;margin:9px 2px 2px}
+  .opt-note.show{display:block;animation:pop .25s ease both}
+  /* passive check-in note (change 6) */
+  .passive-note{font-size:12.5px;line-height:1.5;color:var(--ink-60);margin:12px 2px 2px;display:flex;gap:8px;align-items:flex-start}
+  .passive-note svg{flex:0 0 auto;width:15px;height:15px;margin-top:1px;color:var(--ink-40)}
+  /* chat date picker (change 4) */
+  .date-pick{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:2px}
+  .date-pick input{font-family:inherit;font-size:15px;padding:11px 14px;border:1.5px solid var(--line-2);border-radius:var(--r-sm);background:#fff;color:var(--ink)}
+  .date-pick .days{font-size:13.5px;color:var(--ink-60)}
   .mode.primary{border-color:var(--violet);background:linear-gradient(180deg,rgba(91,62,142,.05),rgba(91,62,142,.01))}
 
   /* Rubi editorial turn */
@@ -420,27 +450,23 @@ details[open] .chev{transform:rotate(180deg)}
 </div></div>
 
 <!-- ================= CHAT VIEW ================= -->
-<section class="view active" id="view-chat">
+<section class="view active landing" id="view-chat">
   <div class="chat-wrap">
     <div class="convo-col">
       <div class="messages" id="messages">
         <div class="hero" id="hero">
-          <div class="context"><b>Life &amp; Health · Florida</b><span class="sep"></span><span>Exam Aug 14, 2026 · 56 days out</span><span class="sep"></span><span>about 2 min</span></div>
           <div class="rubi-intro"><span class="rubi-mark sm"><svg><use href="#rubi"/></svg></span><span class="name">Rubi</span><span class="status"></span></div>
-          <h1>Let's get you ready for exam day.</h1>
-          <p class="sub">I'll ask a few quick questions, then build a study plan around your exam date and the time you've got. Pick how you'd like to go through it — or just start typing below.</p>
-          <div class="fork">
-            <button class="mode primary" onclick="startTalk()">
-              <span class="m-tag">Recommended</span>
-              <span class="m-title">Talk it through <svg class="i" style="width:16px;height:16px;color:var(--violet)" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-              <span class="m-desc">I ask, you answer in your own words. Best if you'd like me to explain as we go.</span>
-            </button>
-            <button class="mode" onclick="startGuided()">
-              <span class="m-tag">Faster</span>
-              <span class="m-title">Fill out a quick form <svg class="i" style="width:16px;height:16px;color:var(--ink-40)" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="13" y2="14"/></svg></span>
-              <span class="m-desc">The same questions on one page. Best if you already know your dates.</span>
-            </button>
+          <h1>Let's get you ready<br>for exam day.</h1>
+          <form class="prompt" onsubmit="engageLanding(event)">
+            <input id="landing-input" class="prompt-in" autocomplete="off" aria-label="Tell Rubi about your exam" placeholder="I'm testing in 8 weeks">
+            <button class="prompt-send" type="submit" aria-label="Start"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
+          </form>
+          <div class="landing-links">
+            <button class="tlink" onclick="startTalk()">Talk it through</button>
+            <span class="ll-sep"></span>
+            <button class="tlink" onclick="startGuided()">Fill out a form</button>
           </div>
+          <svg class="watermark" viewBox="0 0 159 159" aria-hidden="true"><use href="#compass"/></svg>
         </div>
       </div>
 
@@ -461,7 +487,7 @@ details[open] .chev{transform:rotate(180deg)}
       <div class="slot" id="slot-rhythm"><span class="dot"><svg class="i" style="width:13px;height:13px" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><div><div class="k">Rhythm</div><div class="v">—</div></div></div>
       <div class="slot" id="slot-start"><span class="dot"><svg class="i" style="width:13px;height:13px" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><div><div class="k">Starting point</div><div class="v">—</div></div></div>
       <div class="slot readiness" id="slot-readiness"><span class="dot"><svg class="i" style="width:13px;height:13px" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><div><div class="k">Readiness</div><div class="v">—</div></div></div>
-      <div class="slot" id="slot-prefs"><span class="dot"><svg class="i" style="width:13px;height:13px" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><div><div class="k">Formats &amp; check-ins</div><div class="v">—</div></div></div>
+      <div class="slot" id="slot-prefs"><span class="dot"><svg class="i" style="width:13px;height:13px" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><div><div class="k">Check-ins</div><div class="v">—</div></div></div>
     </aside>
   </div>
 </section>
@@ -479,12 +505,14 @@ details[open] .chev{transform:rotate(180deg)}
         <div class="date-in"><input type="date" value="2026-08-14" id="g-date"><span class="days"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>56 days from today</span></div>
         <p class="wlabel">Days per week you can study</p>
         <div class="opt-row" data-single="g-days">
-          <button class="opt sq" onclick="pickOne(this,'g-days')">2</button><button class="opt sq" onclick="pickOne(this,'g-days')">3</button><button class="opt sq" onclick="pickOne(this,'g-days')">4</button><button class="opt sq sel" onclick="pickOne(this,'g-days')">5</button><button class="opt sq" onclick="pickOne(this,'g-days')">6+</button>
+          <button class="opt sq muted" onclick="pickOne(this,'g-days')">1</button><button class="opt sq" onclick="pickOne(this,'g-days')">2</button><button class="opt sq" onclick="pickOne(this,'g-days')">3</button><button class="opt sq" onclick="pickOne(this,'g-days')">4</button><button class="opt sq sel" onclick="pickOne(this,'g-days')">5</button><button class="opt sq" onclick="pickOne(this,'g-days')">6+</button>
         </div>
+        <div class="opt-note"></div>
         <p class="wlabel">Minutes per session</p>
         <div class="opt-row" data-single="g-mins">
-          <button class="opt sq" onclick="pickOne(this,'g-mins')">25 min</button><button class="opt sq" onclick="pickOne(this,'g-mins')">35 min</button><button class="opt sq sel" onclick="pickOne(this,'g-mins')">45 min</button><button class="opt sq" onclick="pickOne(this,'g-mins')">60 min</button><button class="opt sq" onclick="pickOne(this,'g-mins')">90 min</button>
+          <button class="opt sq" onclick="pickOne(this,'g-mins')">25 min</button><button class="opt sq" onclick="pickOne(this,'g-mins')">35 min</button><button class="opt sq sel" onclick="pickOne(this,'g-mins')">45 min</button><button class="opt sq" onclick="pickOne(this,'g-mins')">60 min</button><button class="opt sq" onclick="pickOne(this,'g-mins')">90 min</button><button class="opt sq muted" onclick="pickOne(this,'g-mins')">90+ min</button>
         </div>
+        <div class="opt-note"></div>
         <div class="rubi-suggest"><span class="rubi-mark sm"><svg><use href="#rubi"/></svg></span><div style="flex:1"><div class="rs-head"><span class="rs-title">Rubi suggests 45 min × 5 days</span><button class="use-btn" onclick="gNext()">Use this</button></div><div class="rs-body">About 3.8 hours a week — enough to cover the full Life &amp; Health blueprint before Aug 14 with room to review. Meeting each topic across the week is the spacing that makes it stick.</div></div></div>
       </div>
       <div class="g-nav"><span></span><button class="cta" onclick="gNext()">Continue<svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div>
@@ -500,24 +528,12 @@ details[open] .chev{transform:rotate(180deg)}
     </div>
     <!-- 3 PREFERENCES -->
     <div class="g-step" data-step="2">
-      <div class="g-rubi"><span class="rubi-mark"><svg><use href="#rubi"/></svg></span><div class="bubble">You'll learn your way. Tell me how you like to study and how often I should check in.</div></div>
-      <h2 class="g-head">How you learn best</h2>
+      <div class="g-rubi"><span class="rubi-mark"><svg><use href="#rubi"/></svg></span><div class="bubble">Almost there. One quick thing — what language should I use?</div></div>
+      <h2 class="g-head">Your language</h2>
       <div class="g-card">
         <p class="wlabel">Language</p>
         <div class="toggle-2"><button class="sel" onclick="pickToggle(this)">English</button><button onclick="pickToggle(this)">Español</button></div>
-        <p class="wlabel">Reminders</p>
-        <div class="rem-grid">
-          <button class="rem sel" onclick="pickCard(this,'g-rem')"><div class="rt">Daily</div><div class="rd">A nudge on each study day</div></button>
-          <button class="rem" onclick="pickCard(this,'g-rem')"><div class="rt">A few a week</div><div class="rd">2–3 reminders per week</div></button>
-          <button class="rem" onclick="pickCard(this,'g-rem')"><div class="rt">No reminders</div><div class="rd">I decide when to study</div></button>
-        </div>
-        <p class="wlabel">Content formats you like</p>
-        <div class="fmt-row">
-          <button class="fmt sel" onclick="pickMulti(this)"><svg class="i" style="width:15px;height:15px" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>Video</button>
-          <button class="fmt" onclick="pickMulti(this)"><svg class="i" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg>Audio</button>
-          <button class="fmt sel" onclick="pickMulti(this)"><svg class="i" style="width:15px;height:15px" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10"/></svg>Flashcards</button>
-          <button class="fmt" onclick="pickMulti(this)"><svg class="i" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H22z"/></svg>Reading</button>
-        </div>
+        <p class="passive-note"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Rubi will check in as you go and adjust the pace — you can turn that off anytime from Settings.</p>
       </div>
       <div class="g-nav"><button class="cta ghost" onclick="gBack()">Back</button><button class="cta" onclick="gNext()">Continue<svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div>
     </div>
@@ -1018,9 +1034,19 @@ function setView(v){document.body.setAttribute('data-view',v);
 
 /* ---------------- generic pickers ---------------- */
 function pickOne(btn,g){document.querySelectorAll('[data-single="'+g+'"] .opt').forEach(o=>o.classList.remove('sel'));btn.classList.add('sel');
-  if(g==='g-days'||g==='c-days')plan.perweek=btn.textContent.trim();
-  if(g==='g-mins'||g==='c-mins')plan.mins=parseInt(btn.textContent);
-  if(g==='c-rem')plan.reminders=btn.textContent.trim();}
+  const val=btn.textContent.trim();
+  if(g==='g-days'||g==='c-days')plan.perweek=val;
+  if(g==='g-mins'||g==='c-mins')plan.mins=parseInt(val);
+  if(g==='c-rem')plan.reminders=val;
+  /* change 5: don't block the choice — add a small tradeoff note for the muted picks */
+  const rowEl=btn.closest('.opt-row'), note=rowEl?rowEl.nextElementSibling:null;
+  if(note&&note.classList.contains('opt-note')){
+    let t='';
+    if((g==='g-days'||g==='c-days')&&val==='1') t="One day a week works, but you'll likely need longer sessions to stay on pace.";
+    if((g==='g-mins'||g==='c-mins')&&val.indexOf('90+')===0) t="Long sessions are fine — just plan a short break so focus doesn't dip.";
+    note.textContent=t; note.classList.toggle('show',!!t);
+  }
+}
 function pickCard(btn,g){[...btn.parentNode.children].forEach(c=>{if(c.classList&&c.classList.contains(btn.classList[0]))c.classList.remove('sel')});
   btn.classList.add('sel');
   btn.parentNode.querySelectorAll('.chk svg').forEach(s=>s.innerHTML='<circle cx="12" cy="12" r="10"/>');
@@ -1036,8 +1062,7 @@ function summaryCard(){return `<div class="plan-card">
   ${row('cal','Schedule',plan.mins+' min × '+plan.perweek+' days/wk')}
   ${row('face','Starting point',plan.exp)}
   ${row('globe','Language',plan.lang)}
-  ${row('bell','Check-ins',plan.reminders)}
-  ${row('layers','Formats',plan.formats.join(', ')||'—')}
+  ${row('bell','Check-ins','Automatic')}
 </div>
 <div class="seed"><span class="pct">${plan.readiness}%</span><span class="st">Rubi seeded your starting readiness at ~${plan.readiness}%. We'll sharpen it as you go.</span></div>`;}
 function row(ic,k,v){const I={flag:'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>',cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',face:'<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/>',globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/>',bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',layers:'<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/>'};
@@ -1070,7 +1095,7 @@ function renderG(){
   document.querySelectorAll('.g-step').forEach(s=>s.classList.remove('active'));
   document.querySelector('.g-step[data-step="'+gStep+'"]').classList.add('active');
   if(gStep===3)renderGuidedDiag();
-  if(gStep===4){plan.formats=[...document.querySelectorAll('#view-guided .fmt.sel')].map(f=>f.textContent.trim());document.getElementById('g-summary').innerHTML=summaryCard();}
+  if(gStep===4){plan.reminders='Automatic';document.getElementById('g-summary').innerHTML=summaryCard();}
   window.scrollTo(0,0);
 }
 function gNext(){
@@ -1163,15 +1188,44 @@ function learner(t){el('beat learner',`<div class="chip">${t}</div>`);}
 function down(){requestAnimationFrame(()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}));}
 function clearInputs(){document.querySelectorAll('#messages .widget,#messages .chips,#messages .pick').forEach(e=>e.remove());}
 
-function startTalk(){
-  const hero=document.getElementById('hero');if(hero)hero.remove();
-  rubi(["Hi, I'm Rubi. I'll guide you from here to exam day.",
-        "Let's build a plan you'll actually keep. First up — when's your exam? If you haven't booked it yet, a rough target's fine."]);
-  pending='exam';
-  el('chips',`<button class="chip-btn" onclick="answerExam()">My exam is Aug 14, 2026</button>`);
-  ph('Type your exam date…');
+/* fixed "today" anchor so Aug 14, 2026 reads as 56 days out regardless of the real clock */
+const COMPASS_TODAY = new Date('2026-06-19T00:00:00');
+function chatDays(){ const d=document.getElementById('chat-date'); if(!d||!d.value) return plan.days;
+  return Math.max(1, Math.round((new Date(d.value+'T00:00:00') - COMPASS_TODAY)/86400000)); }
+function updateChatDays(){ const s=document.getElementById('chat-date-days'); if(s) s.textContent=chatDays()+' days from today'; }
+
+/* landing -> engaged: reveal the chat panel + rail, drop the landing prompt & watermark */
+function engageChat(){
+  const vc=document.getElementById('view-chat'); if(vc) vc.classList.remove('landing');
+  const wm=document.querySelector('.watermark'); if(wm) wm.remove();
+  if(window.__ghostTimer){ clearInterval(window.__ghostTimer); window.__ghostTimer=null; }
+  const hero=document.getElementById('hero'); if(hero) hero.remove();
 }
-function ph(t){document.getElementById('chat-input').placeholder=t;}
+function engageLanding(e){ if(e) e.preventDefault(); startTalk(); }
+
+/* rotating ghost text on the landing prompt (change 1) */
+const GHOSTS=["I'm testing in 8 weeks","I haven't booked my exam yet","I've taken this course before","What's actually on the exam?"];
+(function ghostRotate(){ let gi=0;
+  window.__ghostTimer=setInterval(function(){
+    const inp=document.getElementById('landing-input'); if(!inp||inp.value) return;
+    inp.classList.add('ph-out');
+    setTimeout(function(){ gi=(gi+1)%GHOSTS.length; inp.setAttribute('placeholder',GHOSTS[gi]); inp.classList.remove('ph-out'); },300);
+  },2600);
+})();
+
+function startTalk(){
+  engageChat();
+  rubi(["Hi, I'm Rubi. I'll guide you from here to exam day.",
+        "Let's build a plan you'll actually keep. First up — when's your exam? Pick a date below; if you haven't booked yet, a rough target's fine."]);
+  pending=null;
+  /* change 4: inline calendar date picker instead of a typed date */
+  el('widget',`<div class="card">
+    <p class="wlabel">When is your exam?</p>
+    <div class="date-pick"><input type="date" id="chat-date" value="2026-08-14" min="2026-06-19" oninput="updateChatDays()"><span class="days" id="chat-date-days">56 days from today</span></div>
+    <div class="cta-row"><button class="cta" onclick="answerExam()">Confirm date<svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div></div>`);
+  ph('Message Rubi…');
+}
+function ph(t){const ci=document.getElementById('chat-input'); if(ci) ci.placeholder=t;}
 
 function sendBar(){
   const inp=document.getElementById('chat-input');const v=inp.value.trim();
@@ -1183,30 +1237,32 @@ function sendBar(){
   else { learner(v); } // free chatter fallback
 }
 
-function answerExam(){clearInputs();learner('My exam is Aug 14, 2026');fillSlot('exam','Aug 14, 2026 · 56 days');miniProg(stages.rhythm);
-  /* Course length + recommended daily pace. Illustrative/faked for now — becomes
-     data-driven later (real completion data; may vary by state seat-time rules). */
-  const daysOut = plan.days;                                 // pulled from the entered exam date (already computed)
-  const COURSE_HOURS = 40;                                   // hard-coded for now
-  const rawPace = Math.round((COURSE_HOURS * 60) / daysOut); // minutes/day = course hours ÷ days until exam
-  const pace = Math.max(15, Math.round(rawPace / 5) * 5);    // round to a friendly 5-min step
-  let paceLine;
-  if (rawPace > 120) {                                       // very tight timeline — flag it, don't just state it
-    const hrs = (rawPace / 60).toFixed(1).replace(/\.0$/, '');
-    paceLine = "This is a ~" + COURSE_HOURS + "-hour course, and with only " + daysOut +
-      " days that's about " + hrs + " hrs a day — a tight window. We can still make it, but it'll mean longer daily sessions or focusing on the highest-yield topics first.";
-  } else {
-    paceLine = "This is a ~" + COURSE_HOURS + "-hour course, and based on students who've passed, we recommend about " +
-      pace + " min a day to stay on track.";
-  }
-  paceLine = '<span class="pace-insight">' + paceLine + '</span>';  // highlighted Rubi insight (not a card)
-  rubi(["Got it — Aug 14, 2026. That's " + daysOut + " days out, about " + Math.round(daysOut / 7) + " weeks. Very workable if we stay steady.",
-        paceLine,
+function answerExam(){
+  clearInputs();
+  const di=document.getElementById('chat-date');
+  if(di&&di.value){ const d=new Date(di.value+'T00:00:00');
+    plan.days=Math.max(1,Math.round((d-COMPASS_TODAY)/86400000));
+    plan.date=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+  learner('My exam is '+plan.date);
+  fillSlot('exam',plan.date+' · '+plan.days+' days');
+  miniProg(stages.rhythm);
+  /* course length + recommended daily pace — illustrative (data-driven later:
+     real completion data; may vary by state seat-time rules) */
+  const COURSE_HOURS=40, rawPace=Math.round((COURSE_HOURS*60)/plan.days), pace=Math.max(15,Math.round(rawPace/5)*5);
+  const paceLine = rawPace>120
+    ? "This is a ~"+COURSE_HOURS+"-hour course, and with only "+plan.days+" days that's about "+(rawPace/60).toFixed(1).replace(/\.0$/,'')+" hrs a day — a tight window. We can still make it, but it'll mean longer daily sessions or focusing on the highest-yield topics first."
+    : "This is a ~"+COURSE_HOURS+"-hour course, and based on students who've passed, we recommend about "+pace+" min a day to stay on track.";
+  rubi(["Got it — "+plan.date+". That's "+plan.days+" days out, about "+Math.round(plan.days/7)+" weeks. Very workable if we stay steady.",
+        '<span class="pace-insight">'+paceLine+'</span>',
         "How much time can you give it? Pick how many days a week, and how long each session runs."]);
   pending='rhythm';
   el('widget',`<div class="card">
-    <p class="wlabel">Days per week</p><div class="opt-row" data-single="c-days">${[2,3,4,5,'6+'].map(n=>`<button class="opt sq ${n===5?'sel':''}" onclick="pickOne(this,'c-days')">${n}</button>`).join('')}</div>
-    <p class="wlabel">Minutes per session</p><div class="opt-row" data-single="c-mins">${['25 min','35 min','45 min','60 min','90 min'].map(n=>`<button class="opt sq ${n==='45 min'?'sel':''}" onclick="pickOne(this,'c-mins')">${n}</button>`).join('')}</div>
+    <p class="wlabel">Days per week</p>
+    <div class="opt-row" data-single="c-days"><button class="opt sq muted" onclick="pickOne(this,'c-days')">1</button><button class="opt sq" onclick="pickOne(this,'c-days')">2</button><button class="opt sq" onclick="pickOne(this,'c-days')">3</button><button class="opt sq" onclick="pickOne(this,'c-days')">4</button><button class="opt sq sel" onclick="pickOne(this,'c-days')">5</button><button class="opt sq" onclick="pickOne(this,'c-days')">6+</button></div>
+    <div class="opt-note"></div>
+    <p class="wlabel">Minutes per session</p>
+    <div class="opt-row" data-single="c-mins"><button class="opt sq" onclick="pickOne(this,'c-mins')">25 min</button><button class="opt sq" onclick="pickOne(this,'c-mins')">35 min</button><button class="opt sq sel" onclick="pickOne(this,'c-mins')">45 min</button><button class="opt sq" onclick="pickOne(this,'c-mins')">60 min</button><button class="opt sq" onclick="pickOne(this,'c-mins')">90 min</button><button class="opt sq muted" onclick="pickOne(this,'c-mins')">90+ min</button></div>
+    <div class="opt-note"></div>
     <div class="cta-row"><button class="cta" onclick="answerRhythm()">That's my rhythm<svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div></div>`);
   ph('Message Rubi…');
 }
@@ -1250,24 +1306,23 @@ function answerQ(){
 function skipDiag(){clearInputs();learner('Skip for now');plan.readiness=25;fillSlot('readiness','~25% · starting read');afterDiag();}
 function finishDiag(){plan.readiness=28;fillSlot('readiness','~28% · Early');miniProg(stages.learn);
   rubi(["Done — that gives me a starting read on you, around 28% ready. We'll sharpen it as you go.",
-        "Last thing — how do you like to learn, and how should I check in with you?"]);
+        "Last thing — what language should I use?"]);
   askPrefs();
 }
 function afterDiag(){miniProg(stages.learn);rubi(["No problem — I'll start you at a gentle baseline and adjust fast once you begin.",
-  "Last thing — how do you like to learn, and how should I check in with you?"]);askPrefs();}
+  "Last thing — what language should I use?"]);askPrefs();}
 function askPrefs(){
   el('widget',`<div class="card">
-    <p class="wlabel">Formats you like</p><div class="fmt-row" id="c-fmt">${fmt('Video',1)}${fmt('Audio',0)}${fmt('Flashcards',1)}${fmt('Reading',0)}</div>
-    <p class="wlabel">How often should I check in?</p><div class="opt-row" data-single="c-rem">${['Daily','A few a week','No reminders'].map(n=>`<button class="opt ${n==='Daily'?'sel':''}" onclick="pickOne(this,'c-rem')">${n}</button>`).join('')}</div>
     <p class="wlabel">Language</p><div class="toggle-2"><button class="sel" onclick="pickToggle(this)">English</button><button onclick="pickToggle(this)">Español</button></div>
+    <p class="passive-note"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Rubi will check in as you go and adjust the pace — you can turn that off anytime from Settings.</p>
     <div class="cta-row"><button class="cta" onclick="answerPrefs()">Build my plan<svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div></div>`);
   pending=null;
 }
 function fmt(name,on){const I={Video:'<polygon points="5 3 19 12 5 21 5 3"/>',Audio:'<path d="M3 18v-6a9 9 0 0 1 18 0v6"/>',Flashcards:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10"/>',Reading:'<path d="M2 4h7a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H22z"/>'}[name];
   return `<button class="fmt ${on?'sel':''}" onclick="pickMulti(this)"><svg class="i" style="width:15px;height:15px" viewBox="0 0 24 24">${I}</svg>${name}</button>`;}
-function answerPrefs(){plan.formats=[...document.querySelectorAll('#c-fmt .fmt.sel')].map(f=>f.textContent.trim());
-  clearInputs();learner((plan.formats.join(', ')||'Video')+' · '+plan.reminders.toLowerCase()+' · '+plan.lang);
-  fillSlot('prefs',(plan.formats.join(', ')||'Video')+' · '+plan.reminders);miniProg(stages.plan);
+function answerPrefs(){plan.reminders='Automatic';
+  clearInputs();learner(plan.lang+' · check-ins automatic');
+  fillSlot('prefs',plan.lang+' · check-ins automatic');miniProg(stages.plan);
   rubi(["That's everything I need — your plan's on the right, built around your date and how memory actually works.",
         "Ready when you are."]);
   el('plan',`<div class="cta-row"><button class="cta" onclick="goDashboard()">Go to my dashboard<svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></button><button class="textlink" onclick="startGuided();gStep=4;renderG();">Fine-tune in the guided form</button></div>`);
