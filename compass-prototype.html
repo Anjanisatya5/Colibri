@@ -455,18 +455,22 @@ details[open] .chev{transform:rotate(180deg)}
     <div class="convo-col">
       <div class="messages" id="messages">
         <div class="hero" id="hero">
+          <div class="context"><b>Life &amp; Health · Florida</b><span class="sep"></span><span>about 2 min</span></div>
           <div class="rubi-intro"><span class="rubi-mark sm"><svg><use href="#rubi"/></svg></span><span class="name">Rubi</span><span class="status"></span></div>
-          <h1>Let's get you ready<br>for exam day.</h1>
-          <form class="prompt" onsubmit="engageLanding(event)">
-            <input id="landing-input" class="prompt-in" autocomplete="off" aria-label="Tell Rubi about your exam" placeholder="I'm testing in 8 weeks">
-            <button class="prompt-send" type="submit" aria-label="Start"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
-          </form>
-          <div class="landing-links">
-            <button class="tlink" onclick="startTalk()">Talk it through</button>
-            <span class="ll-sep"></span>
-            <button class="tlink" onclick="startGuided()">Fill out a form</button>
+          <h1>Let's get you ready for exam day.</h1>
+          <p class="sub">I'll ask a few quick questions, then build a study plan around your exam date and the time you've got. Pick how you'd like to go through it.</p>
+          <div class="fork">
+            <button class="mode primary" onclick="startTalk()">
+              <span class="m-tag">Recommended</span>
+              <span class="m-title">Talk it through <svg class="i" style="width:16px;height:16px;color:var(--violet)" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span class="m-desc">I ask, you answer in your own words. Best if you'd like me to explain as we go.</span>
+            </button>
+            <button class="mode" onclick="startGuided()">
+              <span class="m-tag">Faster</span>
+              <span class="m-title">Fill out a quick form <svg class="i" style="width:16px;height:16px;color:var(--ink-40)" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="13" y2="14"/></svg></span>
+              <span class="m-desc">The same questions on one page. Best if you already know your dates.</span>
+            </button>
           </div>
-          <svg class="watermark" viewBox="0 0 159 159" aria-hidden="true"><use href="#compass"/></svg>
         </div>
       </div>
 
@@ -1201,29 +1205,14 @@ function engageChat(){
   if(window.__ghostTimer){ clearInterval(window.__ghostTimer); window.__ghostTimer=null; }
   const hero=document.getElementById('hero'); if(hero) hero.remove();
 }
-function engageLanding(e){ if(e) e.preventDefault(); startTalk(); }
-
-/* rotating ghost text on the landing prompt (change 1) */
-const GHOSTS=["I'm testing in 8 weeks","I haven't booked my exam yet","I've taken this course before","What's actually on the exam?"];
-(function ghostRotate(){ let gi=0;
-  window.__ghostTimer=setInterval(function(){
-    const inp=document.getElementById('landing-input'); if(!inp||inp.value) return;
-    inp.classList.add('ph-out');
-    setTimeout(function(){ gi=(gi+1)%GHOSTS.length; inp.setAttribute('placeholder',GHOSTS[gi]); inp.classList.remove('ph-out'); },300);
-  },2600);
-})();
-
 function startTalk(){
   engageChat();
   rubi(["Hi, I'm Rubi. I'll guide you from here to exam day.",
-        "Let's build a plan you'll actually keep. First up — when's your exam? Pick a date below; if you haven't booked yet, a rough target's fine."]);
-  pending=null;
-  /* change 4: inline calendar date picker instead of a typed date */
-  el('widget',`<div class="card">
-    <p class="wlabel">When is your exam?</p>
-    <div class="date-pick"><input type="date" id="chat-date" value="2026-08-14" min="2026-06-19" oninput="updateChatDays()"><span class="days" id="chat-date-days">56 days from today</span></div>
-    <div class="cta-row"><button class="cta" onclick="answerExam()">Confirm date<svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div></div>`);
+        "Let's build a plan you'll actually keep. First up — when's your exam? If you haven't booked yet, a rough target's fine."]);
+  pending='exam';
   ph('Message Rubi…');
+  /* pre-fill the chat bar with the learner's answer; they just tap Send */
+  const ci=document.getElementById('chat-input'); if(ci){ ci.value='My exam is Aug 14, 2026'; ci.focus(); }
 }
 function ph(t){const ci=document.getElementById('chat-input'); if(ci) ci.placeholder=t;}
 
