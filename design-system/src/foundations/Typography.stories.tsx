@@ -1,80 +1,61 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import type { CSSProperties } from 'react';
+import { type as typeScale } from '../tokens/tokens';
 
 /**
- * Foundations · Typography
+ * Foundations · Typography · v5
  *
- * Source Serif for headlines, Inter for UI.
- * A tight -0.02em letterspacing on serif headings keeps them from feeling loose.
+ * Serif for headings (display / h1 / h2), Sans for UI text (body / sm / eyebrow).
+ * All type sizes are tokens — never one-off px values in components.
  */
 
-type Row = { label: string; sample: string; note: string; style: CSSProperties };
-
-const HEADLINES: Row[] = [
-  { label: 'Display · 40 serif',    sample: 'Your learning journey, Jordan',
-    note: '40 · 500 · -0.02em',
-    style: { fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 40, lineHeight: 1.08, letterSpacing: '-0.02em' } },
-  { label: 'H1 · clamp 34–44',      sample: 'Welcome back',
-    note: 'clamp(34,4.4vw,44) · 600',
-    style: { fontFamily: 'var(--serif)', fontWeight: 600, fontSize: 'clamp(34px,4.4vw,44px)', lineHeight: 1.04 } },
-  { label: 'H2 · 25 serif',         sample: 'Your exam schedule',
-    note: '25 · 600 · -0.02em',
-    style: { fontFamily: 'var(--serif)', fontWeight: 600, fontSize: 25, letterSpacing: '-0.02em' } },
-  { label: 'H3 · 22 serif',         sample: 'Annuities',
-    note: '22 · 500',
-    style: { fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 22 } },
-  { label: 'Card title · 19 serif', sample: 'Book your exam seat',
-    note: '19 · 500 · -0.01em',
-    style: { fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 19, letterSpacing: '-0.01em' } },
-  { label: 'Row title · 17 serif',  sample: 'Life insurance policy types',
-    note: '17 · 500',
-    style: { fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 17 } },
-];
-
-const UI: Row[] = [
-  { label: 'Body · 15 sans',        sample: 'Sign in to pick up where you left off.',
-    note: '15 · 400 · ink-60',
-    style: { fontFamily: 'var(--sans)', fontSize: 15, color: 'var(--ink-60)', lineHeight: 1.55 } },
-  { label: 'Body-tight · 14 sans',  sample: 'Rubi pulls your weakest topics plus the cards you marked to review.',
-    note: '14 · 400 · ink-60',
-    style: { fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--ink-60)', lineHeight: 1.5 } },
-  { label: 'Meta · 12.5 sans',      sample: 'Life & Health · Florida · Exam Aug 14 · 8 days out',
-    note: '12.5 · 400 · ink-60',
-    style: { fontFamily: 'var(--sans)', fontSize: 12.5, color: 'var(--ink-60)' } },
-  { label: 'Micro-label · 11 sans', sample: 'TONIGHT',
-    note: '11 · 600 · 0.13em · uppercase',
-    style: { fontFamily: 'var(--sans)', fontSize: 11, fontWeight: 600, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'var(--ink-50)' } },
-  { label: 'Button · 14 sans',      sample: 'Continue',
-    note: '14 · 600',
-    style: { fontFamily: 'var(--sans)', fontSize: 14, fontWeight: 600 } },
-];
-
-function Ramp({ rows, title }: { rows: Row[]; title: string }) {
-  return (
-    <section style={{ marginBottom: 44 }}>
-      <h2 style={{ fontFamily: 'var(--serif)', fontSize: 22, marginBottom: 18 }}>{title}</h2>
-      <div style={{ borderTop: '1px solid var(--hairline)' }}>
-        {rows.map((r) => (
-          <div key={r.label}
-               style={{ display: 'grid', gridTemplateColumns: '180px 1fr 200px', gap: 24, alignItems: 'baseline', padding: '20px 4px', borderBottom: '1px solid var(--hairline)' }}>
-            <span style={{ fontSize: 12, color: 'var(--ink-50)' }}>{r.label}</span>
-            <span style={r.style}>{r.sample}</span>
-            <code style={{ fontSize: 11.5, color: 'var(--ink-60)' }}>{r.note}</code>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+const SAMPLES: Record<string, string> = {
+  '--text-display': 'A system, not a swatch',
+  '--text-h1':      'Section heading',
+  '--text-h2':      'Card title',
+  '--text-body':    'Body copy sits at 15px for comfortable reading.',
+  '--text-sm':      'Supporting detail and captions.',
+  '--text-eyebrow': 'EYEBROW LABEL',
+};
 
 const meta: Meta = { title: 'Foundations/Typography', parameters: { layout: 'padded' } };
 export default meta;
 
 export const Scale: StoryObj = {
   render: () => (
-    <div>
-      <Ramp rows={HEADLINES} title="Headlines · Source Serif 4" />
-      <Ramp rows={UI}        title="UI text · Inter" />
+    <div style={{ maxWidth: 980 }}>
+      <p className="text-body text-muted" style={{ maxWidth: '64ch', marginTop: 0, marginBottom: 20 }}>
+        <b>Source Serif 4</b> for the three heading tiers. <b>Inter</b> for body, small, and eyebrow.
+        Both stacks widen to system fonts so Compass renders correctly wherever the brand fonts don't load.
+      </p>
+      <div style={{ background: 'var(--c-surface)', border: '1px solid var(--c-hairline)', borderRadius: 14, padding: '8px 4px' }}>
+        {typeScale.map((t) => (
+          <div key={t.token} style={{
+            display: 'grid',
+            gridTemplateColumns: '170px 200px 1fr',
+            gap: 20, alignItems: 'baseline',
+            padding: '18px 26px',
+            borderBottom: '1px solid #EFEBE0',
+          }}>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 11.5, color: 'var(--c-faint)' }}>{t.token}</code>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: 11.5, color: 'var(--c-muted)' }}>
+              {t.family === 'serif' ? 'Serif' : 'Sans'} {t.px} / {t.weight}
+            </code>
+            <span style={{
+              fontFamily: t.family === 'serif' ? 'var(--font-serif)' : 'var(--font-sans)',
+              fontSize: t.px,
+              fontWeight: t.weight,
+              lineHeight: t.token === '--text-body' ? 1.55 : 1.2,
+              letterSpacing: t.token === '--text-display' ? '-0.02em'
+                            : t.token === '--text-eyebrow' ? '0.14em'
+                            : 'normal',
+              textTransform: t.token === '--text-eyebrow' ? 'uppercase' : 'none',
+              color: 'var(--c-ink)',
+            }}>
+              {SAMPLES[t.token]}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   ),
 };

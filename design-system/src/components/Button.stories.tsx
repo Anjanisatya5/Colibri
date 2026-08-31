@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
+import { Button, TextLink } from './Button';
 
 const meta: Meta<typeof Button> = {
-  title: 'Atoms/Button',
+  title: 'Components/Button',
   component: Button,
   parameters: { layout: 'padded' },
   args: { children: 'Continue', variant: 'primary' },
   argTypes: {
-    variant: { control: 'select', options: ['primary','ghost','signin','use','text'] },
-    trailingArrow: { control: 'boolean' },
+    variant: { control: 'select', options: ['primary', 'secondary', 'rubi'] },
   },
 };
 export default meta;
@@ -16,24 +15,29 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 export const Primary: Story = {};
-export const PrimaryWithArrow: Story = { args: { trailingArrow: true } };
-export const Ghost: Story = { args: { variant: 'ghost', children: 'Back' } };
-export const Use: Story = { args: { variant: 'use', children: 'Use this' } };
-export const Text: Story = { args: { variant: 'text', children: 'Fine-tune in the guided form' } };
-
-export const Signin: Story = {
-  args: { variant: 'signin', children: 'Sign in' },
-  render: (args) => <div style={{ width: 360 }}><Button {...args} /></div>,
-};
+export const Secondary: Story = { args: { variant: 'secondary', children: 'Back' } };
+export const Rubi: Story = { args: { variant: 'rubi', children: 'Start recalibration' } };
 
 export const AllVariants: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'flex-start' }}>
-      <Button variant="primary" trailingArrow>Continue</Button>
-      <Button variant="ghost">Back</Button>
-      <Button variant="use">Use this</Button>
-      <Button variant="text">Fine-tune in the guided form</Button>
-      <div style={{ width: 360 }}><Button variant="signin">Sign in</Button></div>
+    <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+      <Button variant="primary">Continue</Button>
+      <Button variant="secondary">Back</Button>
+      <Button variant="rubi">Start recalibration</Button>
+      <TextLink>Skip for now</TextLink>
+    </div>
+  ),
+};
+
+export const OnEmphasis: Story = {
+  render: () => (
+    <div className="callout" style={{ display: 'flex', gap: 12, alignItems: 'center', maxWidth: 640 }}>
+      <div style={{ flex: 1 }}>
+        <span className="eyebrow on-emphasis">Tonight</span>
+        <div className="callout-title">Annuities · 45 minutes</div>
+      </div>
+      <Button variant="secondary">Skip</Button>
+      <Button variant="primary">Start session</Button>
     </div>
   ),
 };

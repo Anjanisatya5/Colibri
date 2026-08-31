@@ -1,13 +1,13 @@
 /**
- * Avatar — the initial disc used in the sidebar footer. Backs onto `.avatar` /
- * `.sb-user .avatar`.
+ * Avatar · v5 — the initial disc used in the sidebar footer. Backs onto
+ * `.avatar` / `.sb-user .avatar` in compass.css.
  */
 export interface AvatarProps {
   initials: string;
   size?: number;
-  /** Background color; defaults to `--warm-200`. */
+  /** Background color; defaults to --c-emphasis-fill. */
   background?: string;
-  /** Text color; defaults to a warm gray. */
+  /** Text color; defaults to --c-slate. */
   color?: string;
   className?: string;
 }
@@ -15,8 +15,8 @@ export interface AvatarProps {
 export function Avatar({
   initials,
   size = 24,
-  background = 'var(--warm-200)',
-  color = '#6A675E',
+  background = 'var(--c-emphasis-fill)',
+  color = 'var(--c-slate)',
   className,
 }: AvatarProps) {
   return (
@@ -27,7 +27,8 @@ export function Avatar({
         background, color,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         fontSize: Math.max(9, Math.round(size * 0.42)),
-        fontWeight: 500,
+        fontWeight: 600,
+        flex: 'none',
       }}
     >
       {initials.slice(0, 2).toUpperCase()}

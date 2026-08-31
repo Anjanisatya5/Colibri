@@ -1,7 +1,7 @@
 import type { SVGProps } from 'react';
 
 /**
- * Logo — the Compass rosette. Colored with Intelligence Blue by default;
+ * Logo · v5 — the Compass rosette. Colored with --c-steel by default;
  * pass `fill` to override.
  */
 export interface LogoProps extends Omit<SVGProps<SVGSVGElement>, 'children'> {
@@ -9,7 +9,7 @@ export interface LogoProps extends Omit<SVGProps<SVGSVGElement>, 'children'> {
   fill?: string;
 }
 
-export function Logo({ size = 26, fill = '#1E2761', ...rest }: LogoProps) {
+export function Logo({ size = 26, fill = '#3D5A73', ...rest }: LogoProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 159 159" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Compass" {...rest}>
       <path fill={fill} d="M106.65 132.24H127.57C130.15 132.24 132.24 130.15 132.24 127.57V107.79C132.24 106.84 131.22 106.25 130.38 106.7C125.17 109.52 120.33 113.05 116.02 117.23C111.97 121.16 108.47 125.57 105.59 130.33C105.08 131.17 105.67 132.24 106.65 132.24Z"/>
@@ -28,7 +28,7 @@ export function WordMark({ size = 26 }: { size?: number }) {
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}>
       <Logo size={size} />
-      <b style={{ fontFamily: 'var(--serif)', fontWeight: 600, fontSize: 19, color: 'var(--blue)' }}>Compass</b>
+      <b style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 19, color: 'var(--c-steel)' }}>Compass</b>
     </span>
   );
 }

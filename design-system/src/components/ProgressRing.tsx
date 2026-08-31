@@ -1,69 +1,100 @@
-import type { ReactNode } from 'react';
-
 /**
- * ProgressRing — the "Exam readiness" ring on the dashboard.
+ * ProgressRing (Readiness ring) · v5
  *
- * Rendered as a `conic-gradient`, since the design pairs the ring with a
- * centered paper-colored disc that carries the percentage label.
+ * Steel fill on --c-ring-track (3.8:1 contrast). Value always shown as text
+ * inside the ring — never derive meaning from color alone.
+ *
+ *   <ProgressRing value={62} label="ready" />
  */
 
 export interface ProgressRingProps {
   /** 0–100. */
   value: number;
+  /** Diameter in px. */
   size?: number;
-  /** Thickness of the ring in px. */
-  thickness?: number;
-  /** Filled ring color. */
-  color?: string;
-  /** Track (unfilled) ring color. */
-  trackColor?: string;
-  /** Inner disc color; the ring's hole. */
-  centerColor?: string;
-  /** Rendered inside the ring. */
-  children?: ReactNode;
+  /** Filled arc color. */
+  fill?: string;
+  /** Empty track color. */
+  track?: string;
+  /** Optional caption below the percentage. */
+  label?: string;
+  /** Font size for the value. Defaults to a size proportional to `size`. */
+  valueFontSize?: number;
 }
 
 export function ProgressRing({
   value,
-  size = 158,
-  thickness = 19,
-  color = 'var(--teal)',
-  trackColor = 'var(--warm-200)',
-  centerColor = 'var(--paper)',
-  children,
+  size = 66,
+  fill = 'var(--c-steel)',
+  track = 'var(--c-ring-track)',
+  label,
+  valueFontSize,
 }: ProgressRingProps) {
   const clamped = Math.max(0, Math.min(100, value));
-  const inner = size - thickness * 2;
+  const px = valueFontSize ?? Math.round(size * 0.23);
   return (
     <div
-      style={{
-        flex: 'none', width: size, height: size, borderRadius: '50%',
-        background: `conic-gradient(${color} 0% ${clamped}%, ${trackColor} ${clamped}% 100%)`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}
+      className="ring"
       role="progressbar"
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(clamped)}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: `conic-gradient(${fill} ${clamped}%, ${track} 0)`,
+      }}
     >
-      <div
+      <span
         style={{
-          width: inner, height: inner, borderRadius: '50%', background: centerColor,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          position: 'absolute',
+          inset: Math.max(6, Math.round(size * 0.12)),
+          background: 'var(--c-surface)',
+          borderRadius: '50%',
+          zIndex: 1,
+        }}
+      />
+      <span
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           gap: 1,
         }}
       >
-        {children ?? (
-          <>
-            <span style={{ fontSize: Math.round(size * 0.253), fontWeight: 500, letterSpacing: '-0.02em', lineHeight: 1, color: 'var(--ink)', fontFamily: 'var(--serif)' }}>
-              {Math.round(clamped)}<span style={{ fontSize: '0.42em', verticalAlign: 'super' }}>%</span>
-            </span>
-            <span style={{ fontSize: 10.5, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-50)' }}>
-              Ready
-            </span>
-          </>
+        <span
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: px,
+            fontWeight: 600,
+            color: 'var(--c-ink)',
+            lineHeight: 1,
+          }}
+        >
+          {Math.round(clamped)}
+          <span style={{ fontSize: Math.round(px * 0.5), verticalAlign: 'super', fontWeight: 500 }}>%</span>
+        </span>
+        {label && (
+          <span
+            style={{
+              fontSize: Math.max(9, Math.round(size * 0.075)),
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--c-muted)',
+              fontWeight: 600,
+            }}
+          >
+            {label}
+          </span>
         )}
-      </div>
+      </span>
     </div>
   );
 }
