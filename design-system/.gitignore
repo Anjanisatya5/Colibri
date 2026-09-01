@@ -1,0 +1,9 @@
+node_modules
+storybook-static
+*.log
+.DS_Store
+.vite
+
+# Local one-off screenshot helpers (used only to render Storybook shots to the chat).
+screenshot.mjs
+diag.mjs

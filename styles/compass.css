@@ -1,0 +1,566 @@
+/* ============================================================
+   Compass — visual language · v5
+   Source of truth: styles/compass.css
+   Consumed by: compassprototype (3).html AND design-system/ Storybook.
+
+   Rules that never bend:
+   • ONE surface. Cards, panels, inputs all sit on --c-surface.
+     Elevation = border + shadow, never a second surface color.
+   • --c-emphasis-fill is a ROLE (Tonight callouts, badges, selected
+     pills) — not a second surface.
+   • Text tiers: ink → muted → faint. All AA on both fills.
+   • Steel = system. Terracotta = Rubi (coach).
+   • --c-review is a FILL / DOT color; for amber TEXT use
+     --c-review-text. Color is never the sole cue — signals ship
+     as dot + label.
+   • Every focusable control shows --c-focus at :focus-visible.
+   ============================================================ */
+
+:root {
+  /* ─── Surface (one) ─────────────────────────────── */
+  --c-surface:            #FFFFFF;
+  --c-hairline:           #E0DBCD;   /* decorative dividers only  */
+
+  /* ─── Emphasis role (B tint) ────────────────────── */
+  --c-emphasis-fill:      #ECEEF0;   /* callout tint · NOT a surface */
+  --c-emphasis-hairline:  #D8DEE4;   /* decorative edge inside emphasis */
+
+  /* ─── Interactive edges ─────────────────────────── */
+  --c-border-interactive: #67727D;   /* buttons, inputs, focusable */
+
+  /* ─── Brand ─────────────────────────────────────── */
+  --c-steel:              #3D5A73;   /* primary (nav, links, ring fill) */
+  --c-slate:              #263D50;   /* hover / pressed / focus outline */
+
+  /* ─── Text ──────────────────────────────────────── */
+  --c-ink:                #1F1D18;   /* headings & body (AAA) */
+  --c-muted:              #5B5560;   /* secondary text, captions */
+  --c-faint:              #706B63;   /* meta, weights, timings */
+
+  /* ─── Accent — Rubi ─────────────────────────────── */
+  --c-terracotta:         #B4552F;   /* Rubi accent (rule, eyebrow, ghost) */
+  --c-terracotta-soft:    rgba(180,85,47,0.08); /* terracotta hover bg */
+
+  /* ─── Signals ───────────────────────────────────── */
+  --c-pass:               #2F7A5A;   /* on-track / mastery */
+  --c-review:             #C08A2E;   /* needs-review · DOT / FILL only */
+  --c-review-text:        #835B16;   /* readable amber for TEXT */
+  --c-error:              #B23B2E;   /* genuine errors */
+
+  /* ─── Ring ──────────────────────────────────────── */
+  --c-ring-track:         #C3BBA5;   /* readiness ring empty track */
+
+  /* ─── Focus ─────────────────────────────────────── */
+  --c-focus:              #263D50;
+  --focus-width:          2px;
+  --focus-offset:         2px;
+
+  /* ─── Type ──────────────────────────────────────── */
+  --font-sans:  'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Source Serif 4', 'Iowan Old Style', Palatino, Georgia, serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --text-display: 34px;  /* Serif 500 · line-height 1.2 */
+  --text-h1:      28px;  /* Serif 500 · line-height 1.2 */
+  --text-h2:      20px;  /* Serif 600 · line-height 1.2 */
+  --text-body:    15px;  /* Sans   400 · line-height 1.55 */
+  --text-sm:      13px;  /* Sans   400 */
+  --text-eyebrow: 11px;  /* Sans   600 · 0.14em · uppercase */
+
+  /* ─── Radius ────────────────────────────────────── */
+  --r-sm:   8px;
+  --r-md:   9px;
+  --r-lg:  14px;
+  --r-pill: 20px;
+
+  /* ─── Spacing (4px base) ────────────────────────── */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+
+  /* ─── Elevation ─────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(31,29,24,.05);
+  --shadow-md: 0 1px 2px rgba(31,29,24,.05), 0 8px 24px rgba(31,29,24,.06);
+  --shadow-lg: 0 12px 40px rgba(20,22,30,.16);
+
+  /* ─── Target ────────────────────────────────────── */
+  --target-min: 24px;   /* WCAG 2.5.8 — buttons ≥40px, icon-only ≥44px */
+}
+
+/* ─── Reset & base ─────────────────────────────────── */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--c-surface);
+  color: var(--c-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; }
+a { color: var(--c-steel); text-decoration: none; }
+a:hover { color: var(--c-slate); text-decoration: underline; }
+
+/* Headings — set via utility class or the tag itself */
+h1, .text-display {
+  font-family: var(--font-serif);
+  font-size: var(--text-display);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--c-ink);
+}
+h2, .text-h1 {
+  font-family: var(--font-serif);
+  font-size: var(--text-h1);
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--c-ink);
+}
+h3, .text-h2 {
+  font-family: var(--font-serif);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--c-ink);
+}
+.text-body { font-size: var(--text-body); }
+.text-sm   { font-size: var(--text-sm); }
+.text-ink   { color: var(--c-ink); }
+.text-muted { color: var(--c-muted); }
+.text-faint { color: var(--c-faint); }
+
+/* Eyebrow micro-label */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+.eyebrow.on-emphasis { color: var(--c-slate); }
+.eyebrow.rubi        { color: var(--c-terracotta); letter-spacing: 0.12em; font-weight: 700; }
+
+/* ─── Focus visible (WCAG 2.4.7) ───────────────────── */
+:focus-visible {
+  outline: var(--focus-width) solid var(--c-focus);
+  outline-offset: var(--focus-offset);
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ============================================================
+   Buttons — three variants only
+     .btn.primary    — steel fill (system actions)
+     .btn.secondary  — ghost with border-interactive
+     .btn.rubi       — terracotta ghost (Rubi-authored actions)
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s, color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.btn.primary {
+  min-height: 40px;
+  padding: 11px 18px;
+  font-size: 13.5px;
+  background: var(--c-steel);
+  color: #fff;
+  border-color: var(--c-steel);
+}
+.btn.primary:hover  { background: var(--c-slate); border-color: var(--c-slate); }
+
+.btn.secondary {
+  min-height: 36px;
+  padding: 8px 15px;
+  font-size: 13px;
+  background: transparent;
+  color: var(--c-steel);
+  border-color: var(--c-border-interactive);
+}
+.btn.secondary:hover { background: var(--c-emphasis-fill); color: var(--c-slate); }
+
+.btn.rubi {
+  min-height: 36px;
+  padding: 8px 15px;
+  font-size: 13px;
+  background: transparent;
+  color: var(--c-terracotta);
+  border-color: var(--c-terracotta);
+}
+.btn.rubi:hover { background: var(--c-terracotta-soft); }
+
+/* Text link — inline, underline on hover */
+.textlink {
+  background: none; border: none; padding: 0;
+  color: var(--c-steel);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+.textlink:hover { color: var(--c-slate); text-decoration: underline; }
+
+/* ============================================================
+   Callout — emphasis-fill block (Tonight, badges)
+   ============================================================ */
+.callout {
+  background: var(--c-emphasis-fill);
+  border: 1px solid var(--c-emphasis-hairline);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+}
+.callout > .eyebrow { color: var(--c-slate); }
+.callout .callout-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-top: 4px;
+}
+.callout .callout-meta {
+  font-size: 12.5px;
+  color: var(--c-muted);
+  margin-top: 3px;
+}
+
+/* ============================================================
+   Rubi accent block — left rule, no box
+   Composition: 2px terracotta border-left + 20px padding-left
+   Inside: terracotta eyebrow, serif h3, muted paragraph, .btn.rubi
+   ============================================================ */
+.rubi-block {
+  border-left: 2px solid var(--c-terracotta);
+  padding-left: 20px;
+}
+
+/* ============================================================
+   Signal — dot + label. Color is never the sole cue.
+   ============================================================ */
+.signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.signal .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+.signal.pass        { color: var(--c-pass); }
+.signal.pass  .dot  { background: var(--c-pass); }
+.signal.review      { color: var(--c-review-text); }
+.signal.review .dot { background: var(--c-review); }
+.signal.error       { color: var(--c-error); }
+.signal.error  .dot { background: var(--c-error); }
+
+/* ============================================================
+   Readiness ring — steel fill on ring-track; value as TEXT.
+   Usage:
+     <div class="ring" style="--v:62">
+       <span class="ring-inner"></span>
+       <span class="ring-value">62%</span>
+     </div>
+   ============================================================ */
+.ring {
+  --size: 66px;
+  --v: 0;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(var(--c-steel) calc(var(--v) * 1%), var(--c-ring-track) 0);
+}
+.ring .ring-inner {
+  position: absolute;
+  inset: 8px;
+  background: var(--c-surface);
+  border-radius: 50%;
+}
+.ring .ring-value {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+/* ============================================================
+   Selection controls — pill (single/multi) and option card
+   ============================================================ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  background: var(--c-surface);
+  color: var(--c-ink);
+  border: 1px solid var(--c-hairline);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  min-height: var(--target-min);
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.pill:hover { border-color: var(--c-border-interactive); }
+.pill.selected {
+  background: var(--c-emphasis-fill);
+  color: var(--c-slate);
+  border-color: var(--c-slate);
+}
+/* Multi-select variant: adds a check circle on the left */
+.pill .check {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid var(--c-hairline);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #fff;
+  background: transparent;
+  flex: none;
+}
+.pill.selected .check {
+  background: var(--c-slate);
+  border-color: var(--c-slate);
+}
+
+/* Option card — full-width, icon + title + sub + check */
+.opt-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background .15s, border-color .15s;
+}
+.opt-card:hover { border-color: var(--c-border-interactive); }
+.opt-card.selected {
+  background: var(--c-emphasis-fill);
+  border-color: var(--c-slate);
+}
+.opt-card .opt-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--c-emphasis-fill);
+  color: var(--c-slate);
+  display: flex; align-items: center; justify-content: center;
+  flex: none;
+}
+.opt-card.selected .opt-icon { background: var(--c-ink); color: #fff; }
+.opt-card .opt-body { flex: 1; }
+.opt-card .opt-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: 2px;
+}
+.opt-card .opt-sub { font-size: 13px; color: var(--c-muted); }
+.opt-card .opt-check {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid var(--c-hairline);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  flex: none;
+}
+.opt-card.selected .opt-check {
+  background: var(--c-slate);
+  border-color: var(--c-slate);
+}
+
+/* ============================================================
+   Form field — labeled input
+   ============================================================ */
+.field { margin-bottom: var(--s-4); }
+.field .flabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: var(--s-2);
+}
+.field .flabel a { font-size: var(--text-sm); font-weight: 500; color: var(--c-faint); }
+.field .flabel a:hover { color: var(--c-terracotta); }
+.field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--c-border-interactive);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  font-family: inherit;
+  font-size: var(--text-body);
+  color: var(--c-ink);
+}
+.field input:focus {
+  outline: var(--focus-width) solid var(--c-focus);
+  outline-offset: var(--focus-offset);
+}
+
+/* ============================================================
+   App shell — sidebar 220 + fluid main (max 1120)
+   ============================================================ */
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  background: var(--c-surface);
+}
+.sidebar {
+  padding: 26px 18px;
+  border-right: 1px solid var(--c-hairline);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+.sb-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--c-steel);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+.sb-brand svg { width: 19px; height: 19px; }
+.sb-nav { display: flex; flex-direction: column; gap: 1px; }
+.nav-item {
+  padding: 8px 11px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: var(--c-muted);
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.nav-item:hover { background: var(--c-emphasis-fill); color: var(--c-ink); text-decoration: none; }
+.nav-item.active {
+  background: var(--c-emphasis-fill);
+  color: var(--c-slate);
+  font-weight: 500;
+}
+.nav-item.is-disabled {
+  color: var(--c-faint);
+  pointer-events: none;
+  cursor: default;
+}
+.sb-foot { margin-top: auto; display: flex; flex-direction: column; gap: var(--s-3); }
+.sb-foot .stat { display: flex; flex-direction: column; gap: 3px; }
+.sb-foot .lbl { font-size: 11px; color: var(--c-faint); }
+.sb-foot .val { font-size: 13px; color: var(--c-muted); }
+.sb-user {
+  display: flex; align-items: center; gap: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--c-hairline);
+}
+.avatar {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--c-emphasis-fill);
+  color: var(--c-slate);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600;
+  flex: none;
+}
+.sb-user .who { font-size: 12px; color: var(--c-muted); }
+
+.main {
+  min-width: 0;
+  padding: 36px 44px 140px;
+}
+.main > .max { max-width: 1120px; margin-inline: auto; }
+
+/* ============================================================
+   Section rhythm — eyebrow · content · hairline
+   ============================================================ */
+.section { padding-bottom: 28px; border-bottom: 1px solid var(--c-hairline); }
+.section + .section { padding-top: 32px; }
+
+/* ============================================================
+   Table — hairline rows, no fills
+   ============================================================ */
+.table { width: 100%; border-collapse: collapse; }
+.table thead th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  padding: 12px;
+  border-bottom: 1px solid var(--c-hairline);
+  text-align: left;
+  background: transparent;
+}
+.table tbody td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--c-hairline);
+  vertical-align: middle;
+  font-size: 14px;
+  color: var(--c-ink);
+}
+.table tbody tr:last-child td { border-bottom: none; }
+
+/* ============================================================
+   Responsive collapse (small screens)
+   ============================================================ */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: sticky; top: 0; height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s-3);
+    padding: 12px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--c-hairline);
+    background: var(--c-surface);
+  }
+  .sb-brand { flex: none; }
+  .sb-nav { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; gap: 4px; flex: 1; }
+  .nav-item { white-space: nowrap; }
+  .sb-foot { display: none; }
+  .main { padding: 24px; }
+}
