@@ -385,7 +385,7 @@ details[open] .chev{transform:rotate(180deg)}
   .flow-body{max-width:640px;margin:0;padding:36px 40px 130px}
   .g-progress{height:4px;width:140px;background:var(--hairline);border-radius:99px;overflow:hidden;margin:26px 0 0 40px}
   .g-progress-fill{display:block;height:100%;width:0%;background:var(--violet);border-radius:99px;transition:width .4s ease}
-  .guided-visual{position:sticky;top:56px;height:calc(100vh - 56px);background:var(--warm-100,#F4F2ED);border-left:1px solid var(--hairline);overflow:hidden;display:flex;align-items:center;justify-content:center;padding:40px}
+  .guided-visual{position:sticky;top:56px;height:calc(100vh - 56px);min-height:100%;background:var(--warm-100,#F4F2ED);border-left:1px solid var(--hairline);overflow:hidden;display:flex;align-items:center;justify-content:center;padding:40px;align-self:stretch}
   @media(max-width:900px){.guided-visual{display:none}}
   .gv-panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:40px;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;pointer-events:none}
   .gv-panel.on{opacity:1;transform:translateY(0);pointer-events:auto}
@@ -763,16 +763,16 @@ details[open] .chev{transform:rotate(180deg)}
         <div class="toggle-2" id="g-theme-toggle"><button class="sel" onclick="pickTheme(this,'light')">Light</button><button onclick="pickTheme(this,'dark')">Dark</button></div>
         <p class="wlabel" style="margin-top:20px">Content formats you like</p>
         <div class="g-fmt" id="g-format-chips">
-          <button type="button" class="sel" onclick="this.classList.toggle('sel')">Video</button>
+          <button type="button" onclick="this.classList.toggle('sel')">Video</button>
           <button type="button" onclick="this.classList.toggle('sel')">Audio</button>
-          <button type="button" class="sel" onclick="this.classList.toggle('sel')">Flashcards</button>
+          <button type="button" onclick="this.classList.toggle('sel')">Flashcards</button>
           <button type="button" onclick="this.classList.toggle('sel')">Reading</button>
         </div>
       </div>
     </div>
     <!-- 5 QUICK CHECK -->
     <div class="g-step" data-step="4">
-      <div class="g-rubi"><div class="bubble">Three quick questions to see where you're starting. Nothing's graded, it just helps me set up your plan.</div></div>
+      <div class="g-rubi"><div class="bubble">Nothing's graded, it just helps Compass set up your plan.</div></div>
       <h2 class="g-head">Quick check</h2>
       <div id="g-diag-stack"></div>
       <p class="g-note"><svg class="i" style="width:15px;height:15px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>This gives us a starting point.</p>
@@ -785,9 +785,9 @@ details[open] .chev{transform:rotate(180deg)}
     </div>
   </div>
   <div class="g-nav">
-    <div id="g-nav-note" style="display:none;width:100%;background:var(--warm-100);border-radius:var(--r-md);padding:12px 15px;margin-bottom:10px;align-items:center;gap:10px;font-size:13px;color:var(--ink-60)"><svg style="width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Three quick questions to see where you're starting.</div>
     <div style="display:flex;justify-content:space-between;align-items:center;width:100%"><button class="cta ghost" id="g-back-btn" onclick="gBack()">Back</button>
-    <button class="cta" id="g-continue-btn" onclick="gNext()"><span id="g-continue-label">Continue</span><svg class="i" id="g-continue-icon" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div>
+    <div style="display:flex;align-items:center;gap:16px"><div id="g-nav-note" style="display:none;align-items:flex-start;gap:8px;font-size:14px;color:#999;max-width:210px;text-align:right"><svg style="width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-top:2px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span style="text-align:right">Three quick questions to see where you're starting.</span></div>
+    <button class="cta" id="g-continue-btn" onclick="gNext()"><span id="g-continue-label">Continue</span><svg class="i" id="g-continue-icon" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button></div></div>
   </div>
   </div><!-- /guided-left -->
 
@@ -2405,7 +2405,7 @@ const DASHBOARD_URL = 'dashboard.html';
 
 /* ---------------- shared plan state ---------------- */
 const plan={date:'Aug 14, 2026',days:56,mins:45,perweek:'5',exp:'New to this material',
-  lang:'English',reminders:'Daily',formats:['Video','Flashcards'],readiness:28};
+  lang:'English',reminders:'Daily',formats:[],readiness:28};
 const DIAG=[
   {id:'d1',q:'Which feature lets a whole life policyowner borrow against the policy?',a:['Cash value','Free-look period','Grace period','Reinstatement']},
   {id:'d2',q:'The "free-look" period lets a new policyowner…',a:['Skip one premium','Return the policy for a full refund','Add a rider for free','Change the insurer']},
@@ -2474,14 +2474,14 @@ function renderGuidedDiag(){
           <span class="key">${'ABCD'[ai]}</span><span class="txt">${a}</span></button>`).join('')}
         <p class="conf-label">How sure are you?</p>
         <div class="conf">
-          ${['Guess','Unsure','Maybe','Fairly sure','Certain'].map((c,ci)=>
+          ${['Unsure','Maybe','Certain'].map((c,ci)=>
             `<button class="${conf===ci?'sel':''}" onclick="pickConf(this,${qi},${ci})"><span class="cn">${ci+1}</span><span class="cl">${c}</span></button>`).join('')}
         </div>
       </div>`;
     }
     if(answered){
       const chosenLetter = 'ABCD'[ansIdx];
-      const confLbl = ['Guess','Unsure','Maybe','Fairly sure','Certain'][conf];
+      const confLbl = ['Unsure','Maybe','Certain'][conf];
       return `<button class="qcard answered" data-qi="${qi}" onclick="reopenDiag(${qi})" title="Change your answer">
         <span class="qc-num">${qi+1}</span>
         <span class="qc-body">
@@ -2536,7 +2536,7 @@ function updateContinueLabel(){
   if(!lbl) return;
   if(gStep===4){
     const done = DIAG.every(d => gdAns[d.id]!==undefined && gdConf[d.id]!==undefined);
-    lbl.textContent = done ? 'See my plan' : 'Skip for now';
+    lbl.textContent = done ? 'See my plan' : 'Continue';
   } else if(gStep===5) lbl.textContent = 'Go to my dashboard';
   else lbl.textContent = 'Continue';
 }
