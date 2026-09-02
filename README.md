@@ -1,48 +1,78 @@
-# Compass — clickable prototype
+# Compass
 
-A study-companion prototype: learners onboard with **Rubi**, then land on a
-dashboard that carries the same visual language across every screen.
+A single-file HTML prototype of Compass (Colibri's exam-prep experience) plus
+a componentised design system that documents its visual language.
 
-## Flow
+## Repo layout
 
 ```
-index.html ──(complete either onboarding)──▶ dashboard.html
-  ├─ "Talk it through"  (conversational)          │
-  └─ "Fill out a quick form" (guided steps)        ▼
-                                          Home dashboard ◀─┐
-                                            sidebar nav    │
-                              ┌─────────────┼──────────────┤
-                              ▼             ▼              ▼
-                          rubi.html    course.html   flashcards.html
+Colibri/
+├─ compassprototype (3).html   ← the HTML prototype (login → onboarding → dashboard)
+├─ styles/
+│  └─ compass.css              ← the shared visual language (tokens + component classes).
+│                                 Both the prototype and the design system consume this file.
+└─ design-system/              ← Storybook (Vite + React 18 + TypeScript + Storybook 8).
+                                 Components + docs backed by ../styles/compass.css.
 ```
 
-## Pages
+## Running the prototype
 
-| File | Screen |
-|------|--------|
-| `index.html` | Onboarding — two modes ("Talk it through" chat, "Fill out a quick form"). Both end on **Go to my dashboard** → `dashboard.html`. |
-| `dashboard.html` | Home dashboard (landing page). |
-| `rubi.html` | Learn with Rubi — guided lesson / chat. |
-| `course.html` | Course — modules. |
-| `flashcards.html` | Flashcards by topic. |
-| `styles.css` | **Single source of truth** for the visual language — color tokens, type (Inter + Source Serif 4), radii, shadows, and the shared app-shell + sidebar chrome. Every page links it. |
+Any static web server will do. The simplest:
 
-## Design language
+```bash
+python3 -m http.server 8000
+# open http://localhost:8000/compassprototype%20(3).html
+```
 
-Taken from the dashboard and applied everywhere via `styles.css`:
+The prototype `<link>`s to `styles/compass.css`, so changes to that file are
+picked up on refresh.
 
-- **Type** — Source Serif 4 (display/headings), Inter (interface/body).
-- **Brand** — Intelligence Blue `#1E2761`, Rubi Violet `#5B3E8E`, Adaptive Teal `#0E6E76`.
-- **Signal** — Signal Green `#1B8A5A` (proven), Amber `#B26414` (attention).
-- **Surface & ink** — warm paper `#FAF9F5` through ink `#1A1A16`.
+## Running Storybook
 
-Editorial direction: warm paper, hairline structure, no cards.
+```bash
+cd design-system
+npm install
+npm run storybook           # dev server on http://localhost:6006
+# or:
+npm run build-storybook     # static build → design-system/storybook-static/
+```
 
-## Running it
+Storybook loads the same `styles/compass.css` as a global stylesheet, so what
+you see in the sidebar is what you get in the app.
 
-Open `index.html` in a browser (or serve the folder statically). All five
-pages are self-contained; the only external dependency is Google Fonts,
-which falls back to system fonts offline.
+## Consuming the design system
 
-The sidebar's **Exam simulator** and **Progress** items are intentionally
-inert — those screens aren't part of this prototype yet.
+**From plain HTML** (designers, quick pages):
+
+```html
+<link rel="stylesheet" href="styles/compass.css">
+
+<button class="cta">Continue</button>
+<button class="chip-btn">Skip for now</button>
+<div class="card">…</div>
+```
+
+**From React** (engineers building product):
+
+```tsx
+// One-time in your app entry:
+import '@compass/design-system/../styles/compass.css';
+
+// Then anywhere:
+import { Button, RubiBubble, ProgressRing, Sidebar } from '@compass/design-system';
+```
+
+## What's in the design system
+
+- **Foundations** — Colors, Typography, Radii & Shadows.
+- **Atoms** — Logo, RubiMark, Icon, Button, Chip, Avatar, ProgressBar,
+  ProgressRing, Divider, SectionLabel, SerifHeadline, Tag.
+- **Molecules** — NavItem, Sidebar, Field, ModeCard, OptionButton, Toggle2,
+  RubiBubble, LearnerBubble, RubiSuggestCard, Slot, Stepper, RubiAskBar,
+  WeeklyGrid, ContinueBanner, AssignmentRow, ModuleRow, NextStepCallout,
+  WeakSpotsCard, VideoCard.
+- **Screens** — Login, Dashboard Hero (page-level compositions demonstrating
+  how the atoms and molecules assemble).
+
+If you change a token, change it in one place — `styles/compass.css` — and
+both the prototype and the components pick it up.
